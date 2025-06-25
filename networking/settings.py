@@ -32,7 +32,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://eduhub-backend-aqfv.onrender.com',
+    'https://subnet-calculator-networking-by-imran.onrender.com',
 ]
 
 # Application definition
