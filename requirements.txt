@@ -11,3 +11,4 @@ pillow
 PyJWT
 sqlparse
 tzdata
+whitenoise==6.6.0 

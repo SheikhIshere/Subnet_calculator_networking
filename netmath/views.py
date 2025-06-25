@@ -36,13 +36,17 @@ def subnet_calculator(request):
 
             binary_mask = prefix_to_binary_mask(network.prefixlen)
 
-            # Save to DB including binary_num
+            # Save to DB
             result = SubnetCalculation.objects.create(
                 cidr_input=cidr_input,
+                binary_num=binary_mask,
                 subnet_mask=subnet_mask,
                 total_ip=total_ip,
                 usable_host=usable_host,
-                binary_num=binary_mask,
+                network_address=network_address,
+                first_host=first_host,
+                last_host = last_host,
+                broadcast_address=broadcast_address,
             )
 
             context['result'] = result
