@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('back-door-dashbord/', admin.site.urls),
     path('', include('netmath.urls')),
 ]
