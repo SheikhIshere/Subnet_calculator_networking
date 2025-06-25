@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Subnet Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .result-item {
+            @apply flex justify-between py-2 border-b border-gray-100 last:border-0;
+        }
+        .result-label {
+            @apply font-medium text-gray-600;
+        }
+        .result-value {
+            @apply text-gray-800 font-semibold;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white shadow-lg rounded-xl p-6 w-full max-w-md">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Subnet Calculator</h1>
+            <p class="text-gray-500 mt-1 text-sm">Calculate subnet details instantly</p>
+        </div>
+
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="cidr_input" class="block text-sm font-medium text-gray-700 mb-1">Network Address</label>
+                <input
+                    type="text"
+                    id="cidr_input"
+                    name="cidr_input"
+                    placeholder="e.g. 192.168.1.0/24"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    required
+                />
+                <p class="text-xs text-gray-500 mt-1">Enter IP address with CIDR notation <spant class="text-red-500"> <u><b>note:</b></u> don't add space</spant></p>
+            </div>
+            <button
+                type="submit"
+                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition font-medium"
+            >
+                Calculate Subnet
+            </button>
+        </form>
+
+        {% if result %}
+        <div class="mt-8">
+            <h3 class="font-semibold text-lg mb-3 text-gray-800 flex items-center">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 mr-2 text-green-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"
+                    />
+                </svg>
+                Calculation Results
+            </h3>
+            <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div class="result-item">
+                    <span class="result-label">নেটওয়ার্ক CIDR:</span>
+                    <span class="result-value">{{ result.cidr_input }}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">বাইনারি সাবনেট মাস্ক:</span>
+                    <span class="result-value">{{ result.binary_num }}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">সাবনেট মাস্ক :</span>
+                    <span class="result-value">{{ result.subnet_mask }}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">মোট সাবনেট IPs:</span>
+                    <span class="result-value">{{ result.total_ip }}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">ব্যাবহারযোগ্য হোস্ট অ্যাড্রেস:</span>
+                    <span class="result-value">{{ result.usable_host }}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">নেটওয়ার্ক অ্যাড্রেস:</span>
+                    <span class="result-value">{{ network_address }}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">ব্রডকাস্ট অ্যাড্রেস:</span>
+                    <span class="result-value">{{ broadcast_address }}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">প্রথম ভ্যালিড হোস্ট:</span>
+                    <span class="result-value">{{ first_host|default:"N/A" }}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">শেষ ভ্যালিড হোস্ট:</span>
+                    <span class="result-value">{{ last_host|default:"N/A" }}</span>
+                </div>
+            </div>
+        </div>
+        {% elif error %}
+        <div
+            class="mt-6 p-4 bg-red-50 rounded-lg text-red-700 flex items-start"
+            role="alert"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+            >
+                <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd"
+                />
+            </svg>
+            <div>{{ error }}</div>
+        </div>
+        {% endif %}
+
+        <div class="mt-8 text-center text-xs text-gray-400">
+            <p>Enter a valid IPv4 address with CIDR notation (e.g., 192.168.1.0/24)</p>
+            <p>created with passion by <a href="https://www.facebook.com/3imran3rafi3/" target="_blank" class="text-blue-600"><i class="fa-brands fa-facebook"></i>Imran Rafi</a></p>
+        </div>
+    </div>
+</body>
+</html>
