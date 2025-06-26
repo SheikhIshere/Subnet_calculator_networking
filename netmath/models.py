@@ -13,4 +13,4 @@ class SubnetCalculation(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.cidr_input} related Data created on {self.created_on}"
+        return f"{self.cidr_input} with total {self.total_ip} ip related Data created on {self.created_on}"

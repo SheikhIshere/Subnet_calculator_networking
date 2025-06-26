@@ -12,6 +12,10 @@ def subnet_calculator(request):
     if request.method == 'POST':
         cidr_input = request.POST.get('cidr_input')
 
+        if '/' not in cidr_input:
+            context['error'] = " হালার-পু খালি IP address দেস কেন, CIDR format দে — যেমন: 192.168.1.0/24"
+            return render(request, 'subnet_calculator.html', context)
+
         try:
             network = ipaddress.ip_network(cidr_input, strict=False)
 
